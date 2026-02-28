@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #1e1e2f;
+        color: #f0f0f0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    h2 {
+        margin-bottom: 30px;
+        color: #f0f0f0;
+    }
+
+    .form-container {
+        background-color: #2a2a3f;
+        padding: 30px 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        max-width: 600px;
+        margin: auto;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #ccc;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #1e1e2f;
+        color: #f0f0f0;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    select:focus, input:focus {
+        border-color: #4caf50;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        outline: none;
+    }
+
+    .btn-custom {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-custom:hover {
+        background-color: #45a049;
+    }
+
+</style>
+
+<h2>Registrar Venda</h2>
+
+<div class="form-container">
+    <form method="POST">
+        <div class="mb-3">
+            <label>Cliente</label>
+            <select name="cliente" required>
+                {% for c in clientes %}
+                <option value="{{ c.id }}">{{ c.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Produto</label>
+            <select name="produto" required>
+                {% for p in produtos %}
+                <option value="{{ p.id }}">{{ p.nome }} - R$ {{ p.preco_venda }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Quantidade</label>
+            <input type="number" name="quantidade" min="1" value="1" required>
+        </div>
+
+        <button type="submit" class="btn-custom">Registrar Venda</button>
+    </form>
+</div>
+
+{% endblock %}

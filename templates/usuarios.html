@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #1e1e2f;
+        color: #f0f0f0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    h2 {
+        margin-bottom: 30px;
+    }
+
+    .card-dark {
+        background-color: #2a2a3f;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        margin-bottom: 30px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px 12px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #1e1e2f;
+        color: #f0f0f0;
+    }
+
+    input:focus, select:focus {
+        border-color: #4caf50;
+        outline: none;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+
+    button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #333;
+        text-align: left;
+    }
+
+    th {
+        color: #ccc;
+    }
+
+    tr:hover {
+        background-color: #33334d;
+    }
+
+</style>
+
+<h2>Gerenciar Usuários</h2>
+
+<div class="card-dark">
+    <h4>Criar Novo Usuário</h4>
+
+    <form method="POST">
+        <input type="text" name="username" placeholder="Usuário" required>
+        <input type="password" name="senha" placeholder="Senha" required>
+
+        <select name="nivel" required>
+            <option value="admin">Administrador</option>
+            <option value="vendedor">Vendedor</option>
+        </select>
+
+        <button type="submit">Criar Usuário</button>
+    </form>
+</div>
+
+<div class="card-dark">
+    <h4>Lista de Usuários</h4>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuário</th>
+                <th>Nível</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ u.nivel }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

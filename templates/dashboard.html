@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #1e1e2f;
+        color: #f0f0f0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        color: #fff;
+    }
+
+    .card {
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        padding: 20px;
+        transition: all 0.3s;
+    }
+
+    .card h6 {
+        font-size: 14px;
+        color: #ccc;
+    }
+
+    .card h2 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-top: 5px;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.5);
+    }
+
+    .btn-custom {
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+        margin-bottom: 10px;
+    }
+
+    .btn-custom:hover {
+        transform: translateY(-2px);
+        opacity: 0.9;
+    }
+
+    .btn-success {
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-dark {
+        background-color: #333;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-secondary {
+        background-color: #555;
+        color: #fff;
+        border: none;
+    }
+
+    canvas {
+        background-color: #2a2a3f;
+        border-radius: 12px;
+        padding: 20px;
+    }
+
+</style>
+
+<h1>Dashboard</h1>
+
+<div class="row g-4">
+
+    <div class="col-md-3">
+        <div class="card bg-dark text-white">
+            <h6>Faturamento</h6>
+            <h2>R$ {{ faturamento }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-dark text-white">
+            <h6>Lucro</h6>
+            <h2>R$ {{ lucro }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-dark text-white">
+            <h6>Clientes</h6>
+            <h2>{{ clientes }}</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card bg-dark text-white">
+            <h6>Produtos</h6>
+            <h2>{{ produtos }}</h2>
+        </div>
+    </div>
+
+</div>
+
+<!-- BOTÕES -->
+<div class="mt-4 d-flex flex-wrap gap-2">
+    <a href="/venda" class="btn btn-success btn-custom">Registrar Venda</a>
+    <a href="/historico" class="btn btn-dark btn-custom">Ver Histórico de Vendas</a>
+    {% if session["nivel"] == "admin" %}
+    <a href="/usuarios" class="btn btn-secondary btn-custom">Gerenciar Usuários</a>
+    {% endif %}
+</div>
+
+<!-- GRÁFICO -->
+<div class="card bg-dark text-white mt-5">
+    <h5 class="mb-4">Faturamento por Venda</h5>
+    <canvas id="graficoVendas"
+            data-labels='{{ labels | tojson | safe }}'
+            data-valores='{{ valores | tojson | safe }}'>
+    </canvas>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("graficoVendas");
+
+    if (canvas) {
+        const labels = JSON.parse(canvas.dataset.labels);
+        const valores = JSON.parse(canvas.dataset.valores);
+
+        const ctx = canvas.getContext("2d");
+
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Valor da Venda (R$)",
+                    data: valores,
+                    backgroundColor: "#4caf50",
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: "#f0f0f0"
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: "#f0f0f0" },
+                        grid: { color: "#444" }
+                    },
+                    y: {
+                        ticks: { color: "#f0f0f0" },
+                        grid: { color: "#444" }
+                    }
+                }
+            }
+        });
+    }
+
+});
+</script>
+
+{% endblock %}

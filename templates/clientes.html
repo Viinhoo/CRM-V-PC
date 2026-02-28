@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>Clientes</h2>
+
+<div class="card-dark mb-4">
+    <h4>Novo Cliente</h4>
+    <form method="POST">
+        <input type="text" name="nome" placeholder="Nome do Cliente" required>
+        <input type="text" name="telefone" placeholder="Telefone">
+        <button type="submit">Adicionar Cliente</button>
+    </form>
+</div>
+
+<div class="card-dark">
+    <h4>Lista de Clientes</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>Total Compras</th>
+                <th>Total Gasto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in clientes %}
+            <tr>
+                <td>{{ c.id }}</td>
+                <td>{{ c.nome }}</td>
+                <td>{{ c.telefone }}</td>
+                <td>{{ c.total_compras }}</td>
+                <td>R$ {{ c.total_gasto }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

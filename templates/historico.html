@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    body {
+        background-color: #1e1e2f;
+        color: #f0f0f0;
+        font-family: 'Inter', sans-serif;
+    }
+
+    h2 {
+        margin-bottom: 30px;
+        color: #f0f0f0;
+    }
+
+    .table-container {
+        background-color: #2a2a3f;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        text-align: left;
+        padding: 12px;
+        font-weight: 600;
+        color: #ccc;
+        border-bottom: 1px solid #444;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #333;
+    }
+
+    tr:hover {
+        background-color: #33334d;
+    }
+
+    .lucro-positivo {
+        color: #4caf50;
+        font-weight: 600;
+    }
+
+    .valor-total {
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+</style>
+
+<h2>Histórico de Vendas</h2>
+
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Valor Total</th>
+                <th>Lucro</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for venda in vendas %}
+            <tr>
+                <td>{{ venda.id }}</td>
+                <td>{{ venda.cliente_id }}</td>
+                <td>{{ venda.produto_id }}</td>
+                <td>{{ venda.quantidade }}</td>
+                <td class="valor-total">R$ {{ venda.valor_total }}</td>
+                <td class="lucro-positivo">R$ {{ venda.lucro }}</td>
+                <td>{{ venda.data.strftime('%d/%m/%Y %H:%M') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
