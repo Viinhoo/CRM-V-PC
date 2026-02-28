@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+import os
 
 # =====================================================
 # CONFIGURAÇÃO DO APP
@@ -10,7 +11,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.secret_key = "chavesecreta"
+app.secret_key = os.environ.get("SECRET_KEY")
 
 db = SQLAlchemy(app)
 
