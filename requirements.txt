@@ -3,3 +3,4 @@ Flask-SQLAlchemy
 Flask-Login
 Flask-WTF
 gunicorn
+psycopg2-binary
