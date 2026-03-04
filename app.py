@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
+import psycopg2
 
 # =====================================================
 # CONFIGURAÇÃO DO APP
@@ -10,7 +11,12 @@ import os
 
 app = Flask(__name__)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+database_url = os.environ.get("DATABASE_URL")
+
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = "chavesecreta"
 
@@ -53,6 +59,18 @@ class Usuario(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     senha = db.Column(db.String(200), nullable=False)
     nivel = db.Column(db.String(20), nullable=False)  # admin ou vendedor
+
+with app.app_context():
+    db.create_all()
+
+    if not Usuario.query.filter_by(username="admin").first():
+        admin = Usuario(
+            username="admin",
+            senha=generate_password_hash("1234"),
+            nivel="admin"
+        )
+        db.session.add(admin)
+        db.session.commit()
 
 
 # =====================================================
@@ -265,18 +283,6 @@ def produtos():
 # INICIALIZAÇÃO
 # =====================================================
 
+
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
-        if not Usuario.query.filter_by(username="admin").first():
-            admin = Usuario(
-                username="admin",
-                senha=generate_password_hash("1234"),
-                nivel="admin"
-            )
-            db.session.add(admin)
-            db.session.commit()
-
-    if __name__ == "__main__":
-        app.run(debug=True)
+    app.run(debug=True)
