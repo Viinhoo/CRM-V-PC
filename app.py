@@ -25,6 +25,10 @@ app.secret_key = "chavesecreta"
 
 db = SQLAlchemy(app)
 
+with app.app_context():
+    db.drop_all()
+    db.create_all()
+
 # =====================================================
 # MODELS
 # =====================================================
