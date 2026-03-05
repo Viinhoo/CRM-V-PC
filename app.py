@@ -51,6 +51,10 @@ class Venda(db.Model):
     quantidade = db.Column(db.Integer, nullable=False)
     valor_total = db.Column(db.Float)
     lucro = db.Column(db.Float)
+
+    promocao = db.Column(db.Boolean, default=False)   # NOVO
+    desconto = db.Column(db.Float, default=0)         # NOVO
+
     data = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -119,6 +123,8 @@ def venda():
         cliente_id = int(request.form["cliente"])
         produto_id = int(request.form["produto"])
         quantidade = int(request.form["quantidade"])
+        promocao = "promocao" in request.form
+        desconto = float(request.form.get("desconto", 0))
 
         cliente = Cliente.query.get(cliente_id)
         produto = Produto.query.get(produto_id)
@@ -129,17 +135,18 @@ def venda():
         if produto.estoque < quantidade:
             return "Estoque insuficiente"
 
-        valor_total = produto.preco_venda * quantidade
-        lucro = (produto.preco_venda - produto.custo) * quantidade
+        valor_total = (produto.preco_venda * quantidade) - desconto
+        lucro = ((produto.preco_venda - produto.custo) * quantidade) - desconto
 
         venda = Venda(
-            cliente_id=cliente.id,
-            produto_id=produto.id,
-            quantidade=quantidade,
-            valor_total=valor_total,
-            lucro=lucro
-        )
-
+        cliente_id=cliente.id,
+        produto_id=produto.id,
+        quantidade=quantidade,
+        valor_total=valor_total,
+        lucro=lucro,
+        promocao=promocao,
+        desconto=desconto
+)
         produto.estoque -= quantidade
         cliente.total_gasto += valor_total
         cliente.total_compras += 1
